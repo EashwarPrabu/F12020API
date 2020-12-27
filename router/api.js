@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const Race = require("../model/Race");
+const {raceValidator} = require('../utils/validator');
 
 router.get('/', (req, res) => {
   return res.json({
@@ -19,8 +20,9 @@ router.get("/races", async (req, res) => {
 });
 
 router.get("/races/:race", async (req, res) => {
-  const raceNumber = req.params.race;
-  if(!raceNumber) return res.status(400).send('Race Number field cannot be empty!');
+  const {value, error} = raceValidator(req.params.race);
+  if(error) return res.status(400).send(error.details[0].message);
+  const {raceNumber} = value;
   try {
     const queriedRace = await Race.findOne({ raceNumber });
     if (!queriedRace) return res.send("Sorry, no such race was found! Kindly recheck the raceNumber");
@@ -40,15 +42,15 @@ router.post("/races", async (req, res) => {
   });
   try {
     const savedRace = await race.save();
-    res.status(200).send("Race Info stored successfully!");
+    res.status(200).send(`Info about the ${savedRace.raceName} stored successfully!`);
   } catch (err) {
     res.status(400).send(err);
   }
 });
 
 router.put('/races', async (req, res) => {
-  const raceNumber = req.body.raceNumber;
-  if(!raceNumber) return res.status(400).send('Race Number field cannot be empty!');
+  const {error} = raceValidator(req.body.raceNumber);
+  if(error) return res.status(400).send(error.details[0].message);
   try {
     const updatedRace = await Race.findOneAndUpdate(
       {raceNumber},
@@ -75,9 +77,10 @@ router.delete("/races", async (req, res) => {
 });
 
 router.delete("/races/:race", async (req, res) => {
-  const raceNumber = req.params.race;
-  if(!raceNumber) return res.status(400).send('Race Number field cannot be empty!');
-
+  const {value, error} = raceValidator(req.params.race);
+  if(error) return res.status(400).send(error.details[0].message);
+  
+  const {raceNumber} = value;
   const targetRace = await Race.findOne({ raceNumber });
   if (!targetRace) return res.status(400).send("No such race exists");
 

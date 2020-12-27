@@ -3,6 +3,9 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 
 const apiRouter = require("./router/api");
+const authRouter = require('./router/auth');
+const verifyToken = require('./utils/verifier');
+
 const app = express();
 app.use(express.json());
 
@@ -15,7 +18,8 @@ mongoose.connect(
   () => console.log("Connected to DB!")
 );
 
-app.use("/api", apiRouter);
+app.use('/', authRouter);
+app.use("/api", verifyToken, apiRouter);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Server started at port ${port}`));
