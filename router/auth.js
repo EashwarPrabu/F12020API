@@ -6,6 +6,13 @@ const User = require('../model/User');
 const {signUpValidator, loginValidator} = require('../utils/validator');
 const salt = 10;
 
+router.get('/', (req, res) => {
+    return res.json({
+      status: "Success",
+      message: 'Welcome to the Rest API!',
+    });
+});
+
 router.post('/signup', async (req, res) => {
     const {error} = signUpValidator(req.body);
     if(error) return res.status(400).send(error.details[0].message);

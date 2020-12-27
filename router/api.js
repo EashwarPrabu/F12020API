@@ -2,13 +2,6 @@ const router = require("express").Router();
 const Race = require("../model/Race");
 const {raceValidator} = require('../utils/validator');
 
-router.get('/', (req, res) => {
-  return res.json({
-    status: "Success",
-    message: 'Welcome to the Rest API!',
-  });
-});
-
 router.get("/races", async (req, res) => {
   try {
     const result = await Race.find();
