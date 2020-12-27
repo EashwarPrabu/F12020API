@@ -1,8 +1,8 @@
-const express = require("express");
-const mongoose = require("mongoose");
-require("dotenv").config();
+const express = require('express');
+const mongoose = require('mongoose');
+require('dotenv').config();
 
-const apiRouter = require("./router/api");
+const apiRouter = require('./router/api');
 const authRouter = require('./router/auth');
 const verifyToken = require('./utils/verifier');
 
@@ -15,11 +15,11 @@ mongoose.connect(
     useNewUrlParser: true,
     useUnifiedTopology: true,
   },
-  () => console.log("Connected to DB!")
+  () => console.log('Connected to DB!')
 );
 
 app.use('/', authRouter);
-app.use("/api", verifyToken, apiRouter);
+app.use('/api', verifyToken, apiRouter);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Server started at port ${port}`));
