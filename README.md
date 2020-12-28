@@ -42,7 +42,10 @@ A **_RESTful_** API about the **_2020 F1 season_** implemented securely using JW
 **2. Login:**
 
 ```yaml
-{ 'email': '<Registered Email>', 'password': '<Registered Password>' }
+{ 
+    'email': '<Registered Email>',
+    'password': '<Registered Password>' 
+}
 ```
 
 **3. Race:** (Imaginary Race 😜)
