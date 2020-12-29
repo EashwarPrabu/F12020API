@@ -23,7 +23,7 @@ A **_RESTful_** API about the **_2020 F1 season_** implemented securely using JW
 - `GET /api/races` - Retrieves the info of all the races!
 - `GET /api/races/<raceNumber>` - Retrieves the info of the specified race!
 - `POST /api/races` - Store info about a new race!
-- `PUT /api/races/<raceNumber>` - To update some info about the existing race!
+- `PUT /api/races` - To update some info about the existing race!
 - `DELETE /api/races` - Deletes all the exisiting races!
 - `DELETE /api/races/<raceNumber>` - Deletes the specified race
 
@@ -42,10 +42,7 @@ A **_RESTful_** API about the **_2020 F1 season_** implemented securely using JW
 **2. Login:**
 
 ```yaml
-{ 
-    'email': '<Registered Email>',
-    'password': '<Registered Password>' 
-}
+{ 'email': '<Registered Email>', 'password': '<Registered Password>' }
 ```
 
 **3. Race:** (Imaginary Race 😜)
@@ -61,7 +58,10 @@ A **_RESTful_** API about the **_2020 F1 season_** implemented securely using JW
 }
 ```
 
-**Note**: The **`POST`** and **`PUT`** methods expects the entire payload to work flawlessly!
+**Note**:
+
+- The **`POST`** and **`PUT`** methods expects the entire payload to work flawlessly!
+- The parameter **`raceNumber`** used in the API routes must be a valid number between 1 to 17(The reason being that the 2020 F1 season had a shortened 17 race calendar.)
 
 ## **How to Use:**
 

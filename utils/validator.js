@@ -19,7 +19,7 @@ const loginValidator = data => {
 
 const raceValidator = data => {
   const schema = Joi.object({
-    raceNumber: Joi.number().required(),
+    raceNumber: Joi.number().max(18).required(),
   });
   return schema.validate(data);
 };

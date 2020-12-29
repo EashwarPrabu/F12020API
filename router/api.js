@@ -13,14 +13,15 @@ router.get('/races', async (req, res) => {
 });
 
 router.get('/races/:race', async (req, res) => {
-  const { value, error } = raceValidator(req.params.race);
+  const { value, error } = raceValidator({ raceNumber: req.params.race });
   if (error) return res.status(400).send(error.details[0].message);
   const { raceNumber } = value;
   try {
     const queriedRace = await Race.findOne({ raceNumber });
+    console.log(queriedRace);
     if (!queriedRace)
       return res.send(
-        'Sorry, no such race was found! Kindly recheck the raceNumber'
+        'Sorry, no such race was found! Kindly recheck the raceNumber.'
       );
 
     res.status(200).json(queriedRace);
@@ -30,26 +31,41 @@ router.get('/races/:race', async (req, res) => {
 });
 
 router.post('/races', async (req, res) => {
-  const race = new Race({
-    raceName: req.body.raceName,
-    location: req.body.location,
-    raceNumber: req.body.raceNumber,
-    raceWinner: req.body.raceWinner,
-    driverOfTheDay: req.body.driverOfTheDay,
-  });
+  const { value, error } = raceValidator({ raceNumber: req.body.raceNumber });
+  if (error) return res.status(400).send(error.details[0].message);
+  const { raceNumber } = value;
+  console.log(raceNumber);
   try {
-    const savedRace = await race.save();
-    res
-      .status(200)
-      .send(`Info about the ${savedRace.raceName} stored successfully!`);
+    const existingRace = await Race.findOne({ raceNumber });
+    console.log(existingRace);
+    if (!existingRace) {
+      const race = new Race({
+        raceName: req.body.raceName,
+        location: req.body.location,
+        raceNumber: req.body.raceNumber,
+        raceWinner: req.body.raceWinner,
+        driverOfTheDay: req.body.driverOfTheDay,
+      });
+      const savedRace = await race.save();
+      res
+        .status(200)
+        .send(`Info about the ${savedRace.raceName} stored successfully!`);
+    } else {
+      return res
+        .status(400)
+        .send(
+          `The ${existingRace.raceName} already exists. You can use the PUT method to update the info if you want!`
+        );
+    }
   } catch (err) {
     res.status(400).send(err);
   }
 });
 
 router.put('/races', async (req, res) => {
-  const { error } = raceValidator(req.body.raceNumber);
+  const { value, error } = raceValidator({ raceNumber: req.body.raceNumber });
   if (error) return res.status(400).send(error.details[0].message);
+  const { raceNumber } = value;
   try {
     const updatedRace = await Race.findOneAndUpdate(
       { raceNumber },
@@ -80,7 +96,7 @@ router.delete('/races', async (req, res) => {
 });
 
 router.delete('/races/:race', async (req, res) => {
-  const { value, error } = raceValidator(req.params.race);
+  const { value, error } = raceValidator({ raceNumber: req.params.race });
   if (error) return res.status(400).send(error.details[0].message);
 
   const { raceNumber } = value;

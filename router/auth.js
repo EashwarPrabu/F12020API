@@ -9,22 +9,37 @@ const salt = 10;
 router.get('/', (req, res) => {
   return res.json({
     status: 'Success',
-    message: 'Welcome to the Rest API!',
+    message:
+      'Welcome to the F1 2020 Rest API! To know more about the API, take a look at the link below!',
+    documentation:
+      'https://github.com/EashwarPrabu/F12020API/blob/master/README.md',
   });
 });
 
 router.post('/signup', async (req, res) => {
-  const { error } = signUpValidator(req.body);
+  const {
+    value: { name, email, password },
+    error,
+  } = signUpValidator(req.body);
   if (error) return res.status(400).send(error.details[0].message);
   try {
-    const hashedPassword = await bcrypt.hash(req.body.password, salt);
-    const newUser = new User({
-      name: req.body.name,
-      email: req.body.email,
-      password: hashedPassword,
-    });
-    const savedUser = await newUser.save();
-    return res.send(`Hey ${savedUser.name}, you have successfully signed up!`);
+    const existingUser = await User.findOne({ email });
+    if (!existingUser) {
+      const hashedPassword = await bcrypt.hash(req.body.password, salt);
+      const newUser = new User({
+        name,
+        email,
+        password: hashedPassword,
+      });
+      const savedUser = await newUser.save();
+      return res.send(
+        `Hey ${savedUser.name}, you have successfully signed up!`
+      );
+    } else {
+      return res
+        .status(400)
+        .send('Email ID already exists! Try logging in using your passoword!');
+    }
   } catch (err) {
     return res.status(400).send(err);
   }
