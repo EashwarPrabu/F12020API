@@ -69,3 +69,5 @@ A **_RESTful_** API about the **_2020 F1 season_** implemented securely using JW
 2. Login using your credentials. The response would contain a **`auth-token`** that would be required to access the API.
 3. Copy the **`auth-token`** and add it as an **Header** for all the requests.
 4. Get to know the **2020 F1 season using this awesome API**!
+
+**_Checkout the API: [F1 2020 API](https://f1-2020-api.herokuapp.com/)_**
